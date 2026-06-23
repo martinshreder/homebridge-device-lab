@@ -1,7 +1,7 @@
 {
   "pluginAlias": "HttpSensorsAndSwitches",
   "pluginType": "platform",
-  "headerDisplay": "Sensors, Switches, Lights",
+  "headerDisplay": "Homebridge Device Lab",
   "footerDisplay": "Please use Unique ID's",
   "singular": true,
   "schema": {

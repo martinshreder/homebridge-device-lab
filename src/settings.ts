@@ -6,7 +6,7 @@ export const PLATFORM_NAME = 'HttpSensorsAndSwitches';
 /**
  * This must match the name of your plugin as defined the package.json
  */
-export const PLUGIN_NAME = 'homebridge-http-sensors-switches';
+export const PLUGIN_NAME = 'homebridge-device-lab';
 
 /**
  * This is a list of services that will be imported and registered with the platform

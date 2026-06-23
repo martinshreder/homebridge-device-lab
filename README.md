@@ -1,23 +1,22 @@
 <p align="center">
 
-<img src="https://github.com/kreso975/homebridge-http-sensors-switches/blob/latest/img/homebridge-http-sensors-switches.png?raw=true" width="100">
+<img src="./img/homebridge-http-sensors-switches.png" width="100">
 
 </p>
 
 <span align="center">
 
 ### Homebridge Platform Plugin
-# HTTP Sensors and Switches
+# Homebridge Device Lab
 
 </span>
 
-[![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins) &nbsp;
 <img src="https://img.shields.io/badge/node-^20.18.0%20%7C%7C%20^22.10.0%20%7C%7C%20^24.0.0-brightgreen"> &nbsp;
 <img src="https://img.shields.io/badge/homebridge-^1.8.0%20%7C%7C%20^2.0.0.beta.0-brightgreen"> &nbsp;
-[![Donate](https://img.shields.io/badge/donate-PayPal-blue.svg)](https://paypal.me/kreso975)
-[![Ko-fi](https://img.shields.io/badge/Ko--fi-donate-gray?logo=ko-fi&logoColor=white&labelColor=blue)](https://ko-fi.com/kreso975)
 
-This plugin communicates with your devices using HTTP or MQTT. Currently it supports Light Bulb, Switches, Outlets, Fan, Valve, Sprinkler / Irrigation, Shower, Tap, Door, Garage Door, Shades / Blinds, Temperature/Humidity, Motion, Contact and Occupancy sensor, Air Quality, Smoke, Carbon Dioxide and Light Sensor.  
+Create virtual Homebridge devices backed by HTTP, HTTPS, or MQTT data sources, with JSONata transformations and optional random value generation (RNG).
+
+This fork currently supports Light Bulb, Switches, Outlets, Fan, Valve, Sprinkler / Irrigation, Shower, Tap, Door, Garage Door, Shades / Blinds, Temperature/Humidity, Motion, Contact and Occupancy sensor, Air Quality, Smoke, Carbon Dioxide and Light Sensor.  
     
 Simple Discord Webhooks available in Light Bulb, Switches and Outlets and sensors.   
 

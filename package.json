@@ -1,37 +1,35 @@
 {
-  "name": "homebridge-http-sensors-switches",
-  "displayName": "Http Sensors and Switches",
+  "name": "homebridge-device-lab",
+  "displayName": "Homebridge Device Lab",
   "type": "module",
   "version": "2.3.2",
   "private": false,
-  "description": "This plugin communicates with your devices over HTTP or MQTT. Currently it supports Light Bulb, Switches, Outlets, Fan, Garage Door, Shades / Blinds, Temperature/Humidity, Motion, Contact and Occupancy sensor, Door, Sprinkler, Valve, Air Quality, Smoke, Carbon Dioxide and Light Sensor. Simple Discord Webhooks available in Light Bulb, Switches and Outlets and sensors.",
-  "author": "Kresimir Kokanovic",
+  "description": "Create virtual Homebridge devices backed by HTTP, HTTPS, or MQTT data sources, with JSONata transformations and optional random value generation (RNG).",
+  "author": "martinshreder",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/kreso975/homebridge-http-sensors-switches#readme",
+  "homepage": "https://github.com/martinshreder/homebridge-device-lab#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kreso975/homebridge-http-sensors-switches.git"
+    "url": "git+https://github.com/martinshreder/homebridge-device-lab.git"
   },
   "bugs": {
-    "url": "https://github.com/kreso975/homebridge-http-sensors-switches/issues"
+    "url": "https://github.com/martinshreder/homebridge-device-lab/issues"
   },
-  "funding": [
-    {
-      "type": "paypal",
-      "url": "https://paypal.me/kreso975"
-    },
-    {
-      "type": "ko-fi",
-      "url": "https://ko-fi.com/kreso975"
-    }
-  ],
   "keywords": [
     "homebridge-plugin",
     "homebridge",
     "homekit",
+    "device-lab",
+    "virtual-device",
+    "virtual-switch",
     "http",
+    "https",
     "mqtt",
     "json",
+    "jsonata",
+    "rng",
+    "random",
+    "transform",
     "thermometer",
     "temperature",
     "humidity",
