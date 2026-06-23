@@ -6,7 +6,6 @@ import axios, { AxiosError } from 'axios';
 import mqtt, { IClientOptions } from 'mqtt';
 
 import { SharedPolling, SharedData  } from './lib/SharedPolling.js';       // Include shared polling library
-import { discordWebHooks } from './lib/discordWebHooks.js';
 import { getJsonValue } from './lib/utilities.js';
 import { sensorConfig } from './platformSensorGenericSettings.js';
 
@@ -51,11 +50,6 @@ export class platformSensorGeneric {
   public mqttPassword: string = '';
 
   public updateInterval = 60000;
-
-  public discordWebhook: string = '';
-  public discordUsername: string = '';
-  public discordAvatar: string = '';
-  public discordMessage: string = '';
   
   public paramNames: Record<string, string> = {};
   public mqttTopics: Record<string, string> = {};
@@ -131,12 +125,6 @@ export class platformSensorGeneric {
       this.SensorStatusRanges[sensorKey] = sensorConfig.range;
     });
     // ---------------------------------------------------------------------------------
-
-    this.discordWebhook = device.discordWebhook;
-    this.discordUsername = device.discordUsername || 'StergoSmart';
-    this.discordAvatar = device.discordAvatar
-      || 'https://raw.githubusercontent.com/homebridge/branding/latest/logos/homebridge-color-round-stylized.png';
-    this.discordMessage = device.discordMessage;
 
     this.httpsAgentManager = new HttpsAgentManager( this.trustedCert, this.ignoreHttpsCertErrors, this.urlStatus );
 
@@ -249,11 +237,10 @@ export class platformSensorGeneric {
       this.platform.log.warn(`${this.deviceName}: No configuration found for device type: ${this.deviceType}`);
     }
   
-    return Object.entries(config).map(([state, stateConfig]) => ({
+    return Object.keys(config).map((state) => ({
       state,
       param: this.paramNames[state],
       topic: this.mqttTopics[state],
-      webhook: stateConfig.webhook,
     }));
   }  
 
@@ -310,7 +297,7 @@ export class platformSensorGeneric {
       return;
     }
     
-    for (const { state, param, webhook } of this.getStateDefinition()) {
+    for (const { state, param } of this.getStateDefinition()) {
       if ( !param ) {
         if ( this.enableLogging ) { 
           this.platform.log.debug(`${this.deviceName}: Parameter for ${state} is not configured. Skipping.`);
@@ -341,16 +328,6 @@ export class platformSensorGeneric {
         continue;
       }
 
-      // 🔧 Apply optional transform (safe version)
-      const def =
-        sensorConfig[this.deviceType] &&
-        sensorConfig[this.deviceType].sensors &&
-        sensorConfig[this.deviceType].sensors[state];
-
-      if (def && typeof def.transform === 'function') {
-        value = def.transform(value);
-      }
-
       const range = this.SensorStatusRanges[state];
   
       if (
@@ -368,9 +345,6 @@ export class platformSensorGeneric {
           keyof typeof this.platform.Characteristic] as unknown as WithUUID<new () => Characteristic>;
         this.sensorService.updateCharacteristic( characteristic, value );
   
-        if ( webhook && value === 1 ) {
-          this.initDiscordWebhooks(state);
-        }
       } else if ( this.enableLogging ) {
         this.platform.log.warn(`${this.deviceName}: Received invalid ${state} value: ${value} (valid range: ${range[0]} to ${range[1]}).`);
       }
@@ -424,7 +398,7 @@ export class platformSensorGeneric {
   
     // Handle incoming MQTT messages
     this.mqttClient.on('message', (topic, message) => {
-      this.getStateDefinition().forEach(({ state, topic: stateTopic, webhook }) => {
+      this.getStateDefinition().forEach(({ state, topic: stateTopic }) => {
         if (stateTopic === topic) { // Match incoming topic
           const value = message.toString();
           let newValue;
@@ -436,21 +410,6 @@ export class platformSensorGeneric {
             newValue = ['1', 'true'].includes(normalizedValue) ? 1 : 0;
           } else {
             newValue = Number(value); // Numeric range
-          }
-
-          // 🔧 Apply optional transform (safe version for initMQTT)
-          let def;
-
-          if (
-            sensorConfig[this.deviceType] &&
-            sensorConfig[this.deviceType].sensors &&
-            sensorConfig[this.deviceType].sensors[state]
-          ) {
-            def = sensorConfig[this.deviceType].sensors[state];
-          }
-
-          if (def && typeof def.transform === 'function') {
-            newValue = def.transform(newValue);
           }
 
           // Validate against SensorStatusRanges
@@ -469,10 +428,6 @@ export class platformSensorGeneric {
 
             this.isReachable = true;
 
-            // Trigger webhook if `webhook` is true and `newValue === 1`
-            if ( webhook && newValue === 1 ) {
-              this.initDiscordWebhooks(state);
-            }
           } else {
             if ( this.enableLogging ) {
               this.platform.log.warn(`${this.deviceName}: Invalid value for ${state}: ${newValue} (must be between ${min} and ${max})`);
@@ -505,24 +460,4 @@ export class platformSensorGeneric {
     });
   }
 
-  private initDiscordWebhooks(state: keyof typeof this.SensorStates): void {
-    // Check if WebHook URL is configured
-    if ( !this.discordWebhook ) {
-      return;
-    }
-    
-    // Prepare a dynamic message including the passed state
-    const message = `${this.deviceName}: ${state} - ${this.discordMessage} ${this.getStatus(!!this.SensorStates[state])}`;
-    const discord = new discordWebHooks(this.discordWebhook, this.discordUsername, this.discordAvatar, message);
-
-    discord.discordSimpleSend().then((result) => {
-      if ( this.enableLogging ) {
-        this.platform.log.info(`${this.deviceName}: Webhook sent successfully - `, result);
-      }
-    }).catch((error) => {
-      if ( this.enableLogging ) {
-        this.platform.log.warn(`${this.deviceName}: Failed to send webhook - `, error.message);
-      }
-    });
-  }
 }

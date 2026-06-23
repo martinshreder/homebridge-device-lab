@@ -3,7 +3,6 @@ import type { HttpSensorsAndSwitchesHomebridgePlatform } from './platform.js';
 
 import { SharedPolling, SharedData } from './lib/SharedPolling.js';       // Include shared polling library
 import { getJsonValue } from './lib/utilities.js';                        // Include utility function for JSON value retrieval
-import { discordWebHooks } from './lib/discordWebHooks.js';               // Include Discord webhook library
 
 import { HttpsAgentManager } from './lib/HttpsAgentManager.js';
 import axios, { AxiosError } from 'axios';
@@ -71,11 +70,6 @@ export class platformLightBulb {
   public mqttSaturation: string = '';
   public mqttColorTemperature: string = '';
 
-  public discordWebhook: string = '';
-  public discordUsername: string = '';
-  public discordAvatar: string = '';
-  public discordMessage: string = '';
-
   public lightBulbStates = {
     On: false,
     Brightness: 100,
@@ -142,11 +136,6 @@ export class platformLightBulb {
     this.mqttHue = device.mqttHue;
     this.mqttSaturation = device.mqttSaturation;
     this.mqttColorTemperature = device.mqttColorTemperature;
-
-    this.discordWebhook = device.discordWebhook;
-    this.discordUsername = device.discordUsername || 'StergoSmart';
-    this.discordAvatar = device.discordAvatar || 'https://raw.githubusercontent.com/homebridge/branding/latest/logos/homebridge-color-round-stylized.png';
-    this.discordMessage = device.discordMessage;
 
     this.httpsAgentManager = new HttpsAgentManager(
       this.trustedCert,
@@ -559,11 +548,6 @@ export class platformLightBulb {
         //callback(error);
       });
 
-    // If is set dicordWebhook address
-    if (this.discordWebhook) {
-      this.initDiscordWebhooks();
-    }
-
     callback(null);
     if ( this.enableLogging) {
       this.platform.log.info('Success: Switch ', this.deviceName, ' is: ', this.getStatus(this.lightBulbStates.On));
@@ -844,10 +828,6 @@ export class platformLightBulb {
         }
 
         this.service.updateCharacteristic(this.platform.Characteristic.On, this.lightBulbStates.On);
-        // If is set dicordWebhook address
-        if (this.discordWebhook) {
-          this.initDiscordWebhooks();
-        }
       }
 
       if (topic === this.mqttBrightness) {
@@ -1280,17 +1260,4 @@ export class platformLightBulb {
     return 4000; // Random number - just to have something to return
   }
 
-  private initDiscordWebhooks() {
-    // Prepare message just to send On Off status
-    const message = this.deviceName + ': ' + this.discordMessage + this.getStatus(this.lightBulbStates.On);
-    const discord = new discordWebHooks(this.discordWebhook, this.discordUsername, this.discordAvatar, message);
-
-    discord.discordSimpleSend().then((result) => {
-      if ( this.enableLogging) {
-        this.platform.log.info(this.deviceName, ': ', result);
-      }
-    });
-
-  }
-  
 }

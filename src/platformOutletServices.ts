@@ -3,7 +3,6 @@ import type { HttpSensorsAndSwitchesHomebridgePlatform } from './platform.js';
 
 import { SharedPolling, SharedData } from './lib/SharedPolling.js';     // Include shared polling library
 import { getJsonValue } from './lib/utilities.js';                      // Include utility function for JSON value retrieval
-import { discordWebHooks } from './lib/discordWebHooks.js';             // Include Discord webhook library
 
 import { HttpsAgentManager } from './lib/HttpsAgentManager.js';
 import axios, { AxiosError } from 'axios';
@@ -55,11 +54,6 @@ export class platformOutlet {
   public mqttUsername: string = '';
   public mqttPassword: string = '';
 
-  public discordWebhook: string = '';
-  public discordUsername: string = '';
-  public discordAvatar: string = '';
-  public discordMessage: string = '';
-
   public outletStates = {
     On: false,
     OutletInUse: false,
@@ -104,11 +98,6 @@ export class platformOutlet {
     this.mqttInUse = device.mqttInUse;
     this.mqttUsername = device.mqttUsername;
     this.mqttPassword = device.mqttPassword;
-
-    this.discordWebhook = device.discordWebhook;
-    this.discordUsername = device.discordUsername || 'StergoSmart';
-    this.discordAvatar = device.discordAvatar || 'https://raw.githubusercontent.com/homebridge/branding/latest/logos/homebridge-color-round-stylized.png';
-    this.discordMessage = device.discordMessage;
 
     this.httpsAgentManager = new HttpsAgentManager(
       this.trustedCert,
@@ -383,10 +372,6 @@ export class platformOutlet {
         this.platform.log.warn(this.deviceName, ': Error: ', error.message);
       });
 
-    if (this.discordWebhook) {
-      this.initDiscordWebhooks();
-    }
-
     callback(null);
   }
 
@@ -447,10 +432,6 @@ export class platformOutlet {
         }
 
         this.service.updateCharacteristic(this.platform.Characteristic.On, this.outletStates.On);
-        // If discordWebhook is set
-        if (this.discordWebhook) {
-          this.initDiscordWebhooks();
-        }
       }
       if (topic === this.mqttInUse) {
         this.platform.log.info(this.deviceName, ': inUse set to: ', this.getStatus(Boolean(Number(message))));
@@ -505,15 +486,4 @@ export class platformOutlet {
     callback(null);
   }
 
-  private initDiscordWebhooks() {
-    // Prepare message just to send On Off status
-    const message = this.deviceName + ': ' + this.discordMessage + this.getStatus(this.outletStates.On);
-    const discord = new discordWebHooks(this.discordWebhook, this.discordUsername, this.discordAvatar, message);
-
-    discord.discordSimpleSend().then((result) => {
-      if ( this.enableLogging) {
-        this.platform.log.info(this.deviceName, ': ', result);
-      }
-    });
-  }
 }

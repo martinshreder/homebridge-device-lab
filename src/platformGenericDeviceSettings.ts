@@ -1,7 +1,6 @@
 type State = {
    param: string;
    topic: string;
-   webhook: boolean;    // Indicates if the state will be used in a webhook
    setHandler: boolean; // Indicates if the state has SET handler
    fromConfig: boolean; // Indicates if the state Value is going to be taken from the Homebridge device config
  };
@@ -33,12 +32,12 @@ export const deviceConfig: DeviceConfig = {
       TargetFanState: { defaultValue: 0, range: [0, 1] as [number, number] },     // Valid values: 0 (Manual), 1 (Automatic)
     },
     states: {
-      Active: { param: 'StatusActive', topic: 'Switch', webhook: true, setHandler: true, fromConfig: false },
-      RotationSpeed: { param: 'RotationSpeed', topic: 'RotationSpeed', webhook: false, setHandler: true, fromConfig: false },
-      RotationDirection: { param: 'RotationDirection', topic: 'RotationDirection', webhook: false, setHandler: true, fromConfig: false },
-      SwingMode: { param: 'SwingMode', topic: 'SwingMode', webhook: false, setHandler: true, fromConfig: false },
-      CurrentFanState: { param: 'CurrentFanState', topic: 'CurrentFanState', webhook: false, setHandler: false, fromConfig: false },
-      TargetFanState: { param: 'TargetFanState', topic: 'TargetFanState', webhook: false, setHandler: true, fromConfig: false },
+      Active: { param: 'StatusActive', topic: 'Switch', setHandler: true, fromConfig: false },
+      RotationSpeed: { param: 'RotationSpeed', topic: 'RotationSpeed', setHandler: true, fromConfig: false },
+      RotationDirection: { param: 'RotationDirection', topic: 'RotationDirection', setHandler: true, fromConfig: false },
+      SwingMode: { param: 'SwingMode', topic: 'SwingMode', setHandler: true, fromConfig: false },
+      CurrentFanState: { param: 'CurrentFanState', topic: 'CurrentFanState', setHandler: false, fromConfig: false },
+      TargetFanState: { param: 'TargetFanState', topic: 'TargetFanState', setHandler: true, fromConfig: false },
     },
   },
   GarageDoorOpener: {
@@ -55,10 +54,10 @@ export const deviceConfig: DeviceConfig = {
       StatusJammed: { defaultValue: 0, range: [0, 1] as [number, number] },        // Values: 0 (not jammed), 1 (jammed)
     },
     states: {
-      TargetDoorState: { param: 'TargetDoorState', topic: 'TargetDoorState', webhook: true, setHandler: true, fromConfig: false },
-      CurrentDoorState: { param: 'CurrentDoorState', topic: 'CurrentDoorState', webhook: false, setHandler: false, fromConfig: false },
-      ObstructionDetected: { param: 'ObstructionDetected', topic: 'ObstructionDetected', webhook: false, setHandler: false, fromConfig: false },
-      StatusJammed: { param: 'StatusJammed', topic: 'StatusJammed', webhook: false, setHandler: false, fromConfig: false },
+      TargetDoorState: { param: 'TargetDoorState', topic: 'TargetDoorState', setHandler: true, fromConfig: false },
+      CurrentDoorState: { param: 'CurrentDoorState', topic: 'CurrentDoorState', setHandler: false, fromConfig: false },
+      ObstructionDetected: { param: 'ObstructionDetected', topic: 'ObstructionDetected', setHandler: false, fromConfig: false },
+      StatusJammed: { param: 'StatusJammed', topic: 'StatusJammed', setHandler: false, fromConfig: false },
     },
   },
   DoorOpener: {
@@ -77,11 +76,11 @@ export const deviceConfig: DeviceConfig = {
       StatusJammed: { defaultValue: 0, range: [0, 1] as [number, number] },         // Values: 0 (not jammed), 1 (jammed)
     },
     states: {
-      TargetPosition: { param: 'TargetPosition', topic: 'TargetPosition', webhook: true, setHandler: true, fromConfig: false },
-      CurrentPosition: { param: 'CurrentPosition', topic: 'CurrentPosition', webhook: false, setHandler: false, fromConfig: false },
-      PositionState: { param: 'PositionState', topic: 'PositionState', webhook: false, setHandler: false, fromConfig: false },
-      ObstructionDetected: { param: 'ObstructionDetected', topic: 'ObstructionDetected', webhook: false, setHandler: false, fromConfig: false },
-      StatusJammed: { param: 'StatusJammed', topic: 'StatusJammed', webhook: false, setHandler: false, fromConfig: false },
+      TargetPosition: { param: 'TargetPosition', topic: 'TargetPosition', setHandler: true, fromConfig: false },
+      CurrentPosition: { param: 'CurrentPosition', topic: 'CurrentPosition', setHandler: false, fromConfig: false },
+      PositionState: { param: 'PositionState', topic: 'PositionState', setHandler: false, fromConfig: false },
+      ObstructionDetected: { param: 'ObstructionDetected', topic: 'ObstructionDetected', setHandler: false, fromConfig: false },
+      StatusJammed: { param: 'StatusJammed', topic: 'StatusJammed', setHandler: false, fromConfig: false },
     },
   },
   Window: {
@@ -96,9 +95,9 @@ export const deviceConfig: DeviceConfig = {
       PositionState: { defaultValue: 0, range: [0, 2] as [number, number] },       // Values: 0: Decreasing, 1: Increasing, 2: Stopped
     },
     states: {
-      TargetPosition: { param: 'TargetPosition', topic: 'TargetPosition', webhook: false, setHandler: true, fromConfig: false },
-      CurrentPosition: { param: 'CurrentPosition', topic: 'CurrentPosition', webhook: false, setHandler: false, fromConfig: false },
-      PositionState: { param: 'PositionState', topic: 'PositionState', webhook: false, setHandler: false, fromConfig: false },
+      TargetPosition: { param: 'TargetPosition', topic: 'TargetPosition', setHandler: true, fromConfig: false },
+      CurrentPosition: { param: 'CurrentPosition', topic: 'CurrentPosition', setHandler: false, fromConfig: false },
+      PositionState: { param: 'PositionState', topic: 'PositionState', setHandler: false, fromConfig: false },
     },
   },
   WindowCovering: {
@@ -117,11 +116,11 @@ export const deviceConfig: DeviceConfig = {
       StatusJammed: { defaultValue: 0, range: [0, 1] as [number, number] },       // Values: 0: false, 1: true
     },
     states: {
-      TargetPosition: { param: 'TargetPosition', topic: 'TargetPosition', webhook: false, setHandler: true, fromConfig: false },
-      CurrentPosition: { param: 'CurrentPosition', topic: 'CurrentPosition', webhook: false, setHandler: false, fromConfig: false },
-      PositionState: { param: 'PositionState', topic: 'PositionState', webhook: false, setHandler: false, fromConfig: false },
-      HoldPosition: { param: 'HoldPosition', topic: 'HoldPosition', webhook: false, setHandler: true, fromConfig: false },
-      StatusJammed: { param: 'StatusJammed', topic: 'StatusJammed', webhook: false, setHandler: false, fromConfig: false },
+      TargetPosition: { param: 'TargetPosition', topic: 'TargetPosition', setHandler: true, fromConfig: false },
+      CurrentPosition: { param: 'CurrentPosition', topic: 'CurrentPosition', setHandler: false, fromConfig: false },
+      PositionState: { param: 'PositionState', topic: 'PositionState', setHandler: false, fromConfig: false },
+      HoldPosition: { param: 'HoldPosition', topic: 'HoldPosition', setHandler: true, fromConfig: false },
+      StatusJammed: { param: 'StatusJammed', topic: 'StatusJammed', setHandler: false, fromConfig: false },
     },
   },
   Valve: {
@@ -136,9 +135,9 @@ export const deviceConfig: DeviceConfig = {
       ValveType: { defaultValue: 1, range: [0, 3] as [number, number] },  // 0: Generic valve, 1: Irrigation, 2: Shower head, 3: Tap
     },
     states: {
-      Active: { param: 'StatusActive', topic: 'Active', webhook: false, setHandler: true, fromConfig: false },
-      InUse: { param: 'InUse', topic: 'InUse', webhook: false, setHandler: false, fromConfig: false },
-      ValveType: { param: 'ValveType', topic: 'ValveType', webhook: false, setHandler: false, fromConfig: true },
+      Active: { param: 'StatusActive', topic: 'Active', setHandler: true, fromConfig: false },
+      InUse: { param: 'InUse', topic: 'InUse', setHandler: false, fromConfig: false },
+      ValveType: { param: 'ValveType', topic: 'ValveType', setHandler: false, fromConfig: true },
     },
   },
   // Add more sensor types here if needed

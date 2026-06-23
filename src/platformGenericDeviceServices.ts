@@ -4,7 +4,6 @@ import type { HttpSensorsAndSwitchesHomebridgePlatform } from './platform.js';
 
 import { SharedPolling, SharedData } from './lib/SharedPolling.js';        // Include shared polling library
 import { getJsonValue } from './lib/utilities.js';                         // Include utility function for JSON value retrieval
-import { discordWebHooks } from './lib/discordWebHooks.js';                // Include Discord webhook library
 import { deviceConfig } from './platformGenericDeviceSettings.js';         // Include device settings
 
 import { HttpsAgentManager } from './lib/HttpsAgentManager.js';
@@ -52,11 +51,6 @@ export class platformGenericDevice {
   public mqttUsername: string = '';
   public mqttPassword: string = '';
 
-  public discordWebhook: string = '';
-  public discordUsername: string = '';
-  public discordAvatar: string = '';
-  public discordMessage: string = '';
-
   public paramNames: Record<string, string> = {};
   public mqttTopics: Record<string, string> = {};
   public DeviceStates: Record<string, number> = {};
@@ -93,11 +87,6 @@ export class platformGenericDevice {
     this.mqttPort = device.mqttPort;
     this.mqttUsername = device.mqttUsername;
     this.mqttPassword = device.mqttPassword;
-
-    this.discordWebhook = device.discordWebhook;
-    this.discordUsername = device.discordUsername || 'StergoSmart';
-    this.discordAvatar = device.discordAvatar || 'https://raw.githubusercontent.com/homebridge/branding/latest/logos/homebridge-color-round-stylized.png';
-    this.discordMessage = device.discordMessage;
 
     // Check if deviceType is set and if configuration exists for the current deviceType
     if (!this.deviceType) {
@@ -283,7 +272,6 @@ export class platformGenericDevice {
       state,
       param: this.paramNames[state],
       topic: this.mqttTopics[state],
-      webhook: stateConfig.webhook,
       setHandler: stateConfig.setHandler,
       fromConfig: stateConfig.fromConfig,
     }));
@@ -329,7 +317,7 @@ export class platformGenericDevice {
       return;
     }
 
-    for (const { state, param, webhook, fromConfig } of this.getStateDefinition()) {
+    for (const { state, param, fromConfig } of this.getStateDefinition()) {
       if (!param) {
         if (this.enableLogging) {
           this.platform.log.debug(`${this.deviceName}: Parameter for ${state} is not configured. Skipping.`);
@@ -399,9 +387,6 @@ export class platformGenericDevice {
       ) {
         if (this.enableLogging && this.DeviceStates[state] !== value) {
           this.platform.log.info(`${this.deviceName}: ${state} SET to: ${value}`);
-          if (this.discordWebhook && webhook) {
-            this.initDiscordWebhooks(state);
-          }
         }
 
         this.DeviceStates[state] = value;
@@ -483,11 +468,6 @@ export class platformGenericDevice {
             this.platform.log.debug(this.deviceName, `: MQTT message published for ${state} successfully.`);
           }
         });
-      }
-
-      // Initialize Discord Webhook if configured
-      if (this.discordWebhook) {
-        this.initDiscordWebhooks(state);
       }
 
       // Log success and call callback
@@ -657,19 +637,4 @@ export class platformGenericDevice {
     callback(null);
   }
 
-  private initDiscordWebhooks(state: keyof typeof this.DeviceStates): void {
-    // Prepare a dynamic message including the passed state
-    const message = `${this.deviceName}: ${state} - ${this.discordMessage} ${this.getStatus(!!this.DeviceStates[state])}`;
-    const discord = new discordWebHooks(this.discordWebhook, this.discordUsername, this.discordAvatar, message);
-
-    discord.discordSimpleSend().then((result) => {
-      if (this.enableLogging) {
-        this.platform.log.info(`${this.deviceName}: Webhook sent successfully - `, result);
-      }
-    }).catch((error) => {
-      if (this.enableLogging) {
-        this.platform.log.warn(`${this.deviceName}: Failed to send webhook - `, error.message);
-      }
-    });
-  }
 }

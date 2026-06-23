@@ -25,25 +25,115 @@
             "deviceType": {
               "type": "string",
               "title": "Device Type",
-              "oneOf":[
-                {"title":"Temperature & Humidity Sensor","enum":["Sensor"]},
-                {"title":"Switch","enum":["Switch"]},
-                {"title":"Outlet","enum":["Outlet"]},
-                {"title":"Light Bulb","enum":["LightBulb"]},
-                {"title":"Fan","enum":["Fan"]},
-                {"title":"Motion Sensor","enum":["MotionSensor"]},
-                {"title":"Contact Sensor","enum":["ContactSensor"]},
-                {"title":"Battery","enum":["Battery"]},
-                {"title":"Light Sensor","enum":["LightSensor"]},
-                {"title":"Air Quality","enum":["AirQualitySensor"]},
-                {"title":"Carbon Dioxide","enum":["CarbonDioxideSensor"]},
-                {"title":"Smoke Sensor","enum":["SmokeSensor"]},
-                {"title":"Occupancy Sensor","enum":["OccupancySensor"]},
-                {"title":"Door","enum":["DoorOpener"]},
-                {"title":"Garage Door","enum":["GarageDoorOpener"]},
-                {"title":"Window","enum":["Window"]},
-                {"title":"Window Covering","enum":["WindowCovering"]},
-                {"title":"Valve","enum":["Valve"]}
+              "oneOf": [
+                {
+                  "title": "Temperature & Humidity Sensor",
+                  "enum": [
+                    "Sensor"
+                  ]
+                },
+                {
+                  "title": "Switch",
+                  "enum": [
+                    "Switch"
+                  ]
+                },
+                {
+                  "title": "Outlet",
+                  "enum": [
+                    "Outlet"
+                  ]
+                },
+                {
+                  "title": "Light Bulb",
+                  "enum": [
+                    "LightBulb"
+                  ]
+                },
+                {
+                  "title": "Fan",
+                  "enum": [
+                    "Fan"
+                  ]
+                },
+                {
+                  "title": "Motion Sensor",
+                  "enum": [
+                    "MotionSensor"
+                  ]
+                },
+                {
+                  "title": "Contact Sensor",
+                  "enum": [
+                    "ContactSensor"
+                  ]
+                },
+                {
+                  "title": "Battery",
+                  "enum": [
+                    "Battery"
+                  ]
+                },
+                {
+                  "title": "Light Sensor",
+                  "enum": [
+                    "LightSensor"
+                  ]
+                },
+                {
+                  "title": "Air Quality",
+                  "enum": [
+                    "AirQualitySensor"
+                  ]
+                },
+                {
+                  "title": "Carbon Dioxide",
+                  "enum": [
+                    "CarbonDioxideSensor"
+                  ]
+                },
+                {
+                  "title": "Smoke Sensor",
+                  "enum": [
+                    "SmokeSensor"
+                  ]
+                },
+                {
+                  "title": "Occupancy Sensor",
+                  "enum": [
+                    "OccupancySensor"
+                  ]
+                },
+                {
+                  "title": "Door",
+                  "enum": [
+                    "DoorOpener"
+                  ]
+                },
+                {
+                  "title": "Garage Door",
+                  "enum": [
+                    "GarageDoorOpener"
+                  ]
+                },
+                {
+                  "title": "Window",
+                  "enum": [
+                    "Window"
+                  ]
+                },
+                {
+                  "title": "Window Covering",
+                  "enum": [
+                    "WindowCovering"
+                  ]
+                },
+                {
+                  "title": "Valve",
+                  "enum": [
+                    "Valve"
+                  ]
+                }
               ],
               "required": true,
               "default": "Switch",
@@ -456,11 +546,31 @@
             "paramNameValveType": {
               "type": "number",
               "title": "Valve Type",
-              "oneOf":[
-                {"title":"Generic valve","enum":[0]},
-                {"title":"Irrigation","enum":[1]},
-                {"title":"Shower head","enum":[2]},
-                {"title":"Tap","enum":[3]}
+              "oneOf": [
+                {
+                  "title": "Generic valve",
+                  "enum": [
+                    0
+                  ]
+                },
+                {
+                  "title": "Irrigation",
+                  "enum": [
+                    1
+                  ]
+                },
+                {
+                  "title": "Shower head",
+                  "enum": [
+                    2
+                  ]
+                },
+                {
+                  "title": "Tap",
+                  "enum": [
+                    3
+                  ]
+                }
               ],
               "required": false
             },
@@ -785,30 +895,6 @@
             "mqttTampered": {
               "title": "MQTT Topic for Tampered",
               "description": "MQTT Topic Name for Tampered",
-              "type": "string",
-              "required": false
-            },
-            "discordWebhook": {
-              "title": "Discord WebHook",
-              "description": "URL to Discord WebHook",
-              "type": "string",
-              "required": false
-            },
-            "discordUsername": {
-              "title": "Discord Username",
-              "description": "Name for publisher",
-              "type": "string",
-              "required": false
-            },
-            "discordAvatar": {
-              "title": "Discord Avatar",
-              "description": "URL to Online Avatar image",
-              "type": "string",
-              "required": false
-            },
-            "discordMessage": {
-              "title": "Discord Message",
-              "description": "Message",
               "type": "string",
               "required": false
             }
@@ -1476,19 +1562,6 @@
                     "devices[].mqttStatusJammed"
                   ]
                 }
-              ]
-            },
-            {
-              "key": "devices[]",
-              "type": "fieldset",
-              "title": "🗣️ Discord {{ value.deviceType }} Webhook Settings",
-              "expandable": true,
-              "expanded": false,
-              "items": [
-                "devices[].discordWebhook",
-                "devices[].discordUsername",
-                "devices[].discordAvatar",
-                "devices[].discordMessage"
               ]
             }
           ]

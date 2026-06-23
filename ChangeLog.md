@@ -1,3 +1,10 @@
+## [2.4.4] - 2026-06-24
+### Changed
+- Reworked README around the Homebridge Device Lab direction.
+- Removed the LightSensor-specific transform hook; use JSONata expressions for value fixes such as mapping `0` lux to `0.0001`.
+- Removed Discord webhook support from runtime code and Homebridge UI schema.
+- Updated dependency lockfile and direct dependency ranges; npm audit reports 0 vulnerabilities.
+
 ## [2.4.3] - in progress
 - Dependencies update
 

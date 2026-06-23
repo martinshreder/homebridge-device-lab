@@ -7,7 +7,6 @@ import mqtt, { IClientOptions }  from 'mqtt';
 
 import { SharedPolling, SharedData } from './lib/SharedPolling.js';       // Include shared polling library
 import { getJsonValue } from './lib/utilities.js';
-import { discordWebHooks } from './lib/discordWebHooks.js';               // Include Discord webhook library
 
 
 /**
@@ -60,11 +59,6 @@ export class platformSensors {
   public mqttBatteryStatusLow: string = '';
   public mqttUsername: string = '';
   public mqttPassword: string = '';
-
-  public discordWebhook: string = '';
-  public discordUsername: string = '';
-  public discordAvatar: string = '';
-  public discordMessage: string = '';
  
   public currentTemperature: number = 20;
   public currentHumidity: number = 50;
@@ -114,11 +108,6 @@ export class platformSensors {
     this.mqttBatteryStatusLow = device.mqttLowBattery;
     this.mqttUsername = device.mqttUsername;
     this.mqttPassword = device.mqttPassword;
-
-    this.discordWebhook = device.discordWebhook;
-    this.discordUsername = device.discordUsername || 'StergoSmart';
-    this.discordAvatar = device.discordAvatar || 'https://raw.githubusercontent.com/homebridge/branding/latest/logos/homebridge-color-round-stylized.png';
-    this.discordMessage = device.discordMessage;
 
     this.httpsAgentManager = new HttpsAgentManager(
       this.trustedCert,
@@ -403,11 +392,6 @@ export class platformSensors {
             this.platform.log.info(this.deviceName, ': Battery Status Low = ', this.currentBatteryStatusLow.toString());
           }
 
-          // ✅ Send Discord webhook only if battery is low
-          if (this.currentBatteryStatusLow && this.discordWebhook) {
-            this.initDiscordWebhooks();
-          }
-
         } else {
           this.platform.log.warn(this.deviceName, ': Error: Cannot find or convert: ', this.batteryStatusLowName, ' in JSON');
         }
@@ -554,14 +538,4 @@ export class platformSensors {
     });
   }
 
-  private initDiscordWebhooks(): void {
-    const message = `${this.deviceName}: LOW BATTERY WARNING!`;
-    const discord = new discordWebHooks(this.discordWebhook, this.discordUsername, this.discordAvatar, message);
-    
-    discord.discordSimpleSend().then((result) => {
-      this.platform.log.info(`${this.deviceName}: Discord Webhook result - ${result}`);
-    }).catch((error) => {
-      this.platform.log.warn(`${this.deviceName}: Discord Webhook error - ${error.message}`);
-    });
-  }
 }
