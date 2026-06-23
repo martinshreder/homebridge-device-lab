@@ -21,7 +21,7 @@
         {
             "name": "Stergo",
             "description": "Http all in one place",
-            "platform": "HttpSensorsAndSwitches",
+            "platform": "DeviceLab",
             "devices": [
                 {
                     "deviceType": "Sensor",

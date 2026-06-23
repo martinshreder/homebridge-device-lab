@@ -1,5 +1,5 @@
 {
-  "pluginAlias": "HttpSensorsAndSwitches",
+  "pluginAlias": "DeviceLab",
   "pluginType": "platform",
   "headerDisplay": "Homebridge Device Lab",
   "footerDisplay": "Please use Unique ID's",

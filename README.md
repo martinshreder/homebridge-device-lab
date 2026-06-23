@@ -629,9 +629,9 @@ I have several devices built by my self like ESP8266 with relay and I'm just swi
             "platform": "config"
         },
         {
-            "platform": "HttpSensorsAndSwitches",
-            "name": "Stergo",
-            "description": "Http all in one place",
+            "platform": "DeviceLab",
+            "name": "Device Lab",
+            "description": "Virtual devices backed by HTTP, HTTPS, MQTT, JSONata, and RNG",
             "devices": [
                 {
                     "deviceType": "Sensor",
@@ -936,8 +936,8 @@ If you want to work on this plugin locally instead of just using it via npm, fol
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/kreso975/homebridge-http-sensors-switches.git
-cd homebridge-http-sensors-switches
+git clone https://github.com/martinshreder/homebridge-device-lab.git
+cd homebridge-device-lab
 ```
 
 ### 2. Install Dependencies
