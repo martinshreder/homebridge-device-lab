@@ -2,7 +2,7 @@
   "name": "homebridge-device-lab",
   "displayName": "Homebridge Device Lab",
   "type": "module",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "private": false,
   "description": "Create virtual Homebridge devices backed by HTTP, HTTPS, or MQTT data sources, with JSONata transformations and optional random value generation (RNG).",
   "author": "martinshreder",
