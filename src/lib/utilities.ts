@@ -1,4 +1,8 @@
 
+import jsonata from 'jsonata';
+
+const jsonataExpressionCache = new Map<string, ReturnType<typeof jsonata>>();
+
 /**
  * Retrieves the value of a nested property from a JSON object based on a dot-separated key path.
  * Converts the retrieved value into the specified return type (number, string, or boolean).
@@ -44,6 +48,67 @@ export function getNestedValue(
 }
 
 /**
+ * Retrieves and converts a value from JSON using JSONata, with dot notation fallback.
+ *
+ * Existing dot-separated paths such as "sensor.temperature" are valid JSONata, so
+ * this preserves the old config format while allowing expressions and transforms.
+ */
+export async function getJsonValue(
+  obj: Record<string, unknown>,
+  expressionText: string,
+  returnType: 'number',
+  onJsonataError?: (error: unknown) => void,
+): Promise<number | null>;
+export async function getJsonValue(
+  obj: Record<string, unknown>,
+  expressionText: string,
+  returnType: 'string',
+  onJsonataError?: (error: unknown) => void,
+): Promise<string | null>;
+export async function getJsonValue(
+  obj: Record<string, unknown>,
+  expressionText: string,
+  returnType: 'boolean',
+  onJsonataError?: (error: unknown) => void,
+): Promise<boolean | null>;
+export async function getJsonValue(
+  obj: Record<string, unknown>,
+  expressionText: string,
+  returnType: 'number' | 'string' | 'boolean',
+  onJsonataError?: (error: unknown) => void,
+): Promise<number | string | boolean | null> {
+  let value: unknown;
+
+  try {
+    let expression = jsonataExpressionCache.get(expressionText);
+    if (!expression) {
+      expression = jsonata(expressionText);
+      jsonataExpressionCache.set(expressionText, expression);
+    }
+
+    value = await expression.evaluate(obj);
+  } catch (error) {
+    onJsonataError?.(error);
+    return getNestedValue(obj, expressionText, returnType);
+  }
+
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  switch (returnType) {
+  case 'number':
+    return Number(value);
+  case 'string':
+    return String(value);
+  case 'boolean':
+    return Boolean(value);
+  default:
+    throw new Error(`Invalid return type: ${returnType}`);
+  }
+}
+
+/**
  * Checks if a nested key exists in the given object.
  *
  * @param obj - The object to search within.
@@ -67,4 +132,3 @@ export function hasNestedKey(
 
   return true; // Key exists
 }
-

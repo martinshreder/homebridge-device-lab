@@ -2,7 +2,7 @@ import { CharacteristicSetCallback, CharacteristicValue, PlatformAccessory, Serv
 import type { HttpSensorsAndSwitchesHomebridgePlatform } from './platform.js';
 
 import { SharedPolling, SharedData } from './lib/SharedPolling.js';     // Include shared polling library
-import { getNestedValue, hasNestedKey } from './lib/utilities.js';      // Include utility function for nested value retrieval
+import { getJsonValue } from './lib/utilities.js';                      // Include utility function for JSON value retrieval
 import { discordWebHooks } from './lib/discordWebHooks.js';             // Include Discord webhook library
 
 import { HttpsAgentManager } from './lib/HttpsAgentManager.js';
@@ -222,7 +222,7 @@ export class platformOutlet {
   }
 
   private updateOutletStatusFromSharedData( data?: Record<string, unknown> ): void {
-    this.processOutletGetData(data, true);
+    void this.processOutletGetData(data, true);
   }
 
   private async getOn() {
@@ -238,7 +238,7 @@ export class platformOutlet {
 
       const data = response.data;
       this.platform.log.debug(`${this.deviceName}: Fetched JSON data:`, data);
-      this.processOutletGetData(data, false);
+      await this.processOutletGetData(data, false);
     } catch (error) {
       this.isReachable = false; // ❌ Mark as unreachable
 
@@ -251,41 +251,62 @@ export class platformOutlet {
     }
   }
 
-  private processOutletGetData(data: Record<string, unknown> | undefined, isSharedData: boolean): void {
+  private async processOutletGetData(data: Record<string, unknown> | undefined, isSharedData: boolean): Promise<void> {
     if (!data) {
       this.platform.log.warn(`${this.deviceName}: No data available for ${isSharedData ? 'shared data update' : 'fetching Outlet state'}.`);
       return;
     }
 
-    if ( this.statusStateParam && hasNestedKey(data, this.statusStateParam) ) {
-      const value = getNestedValue(data, this.statusStateParam, 'string'); // Adjust returnType as needed
-      const valueType = typeof value;
-      
-      let statusOnCheck: boolean | number | string;
-      let statusOffCheck: boolean | number | string;
-      
-      if (valueType === 'boolean') {
-        statusOnCheck = true;
-        statusOffCheck = false;
-      } else if (valueType === 'number') {
-        statusOnCheck = parseFloat(this.statusOnCheck);
-        statusOffCheck = parseFloat(this.statusOffCheck);
+    if ( this.statusStateParam ) {
+      const value = await getJsonValue(data, this.statusStateParam, 'string', (error) => {
+        if (this.enableLogging) {
+          const message = error instanceof Error ? error.message : String(error);
+          this.platform.log.warn(`${this.deviceName}: JSONata error for '${this.statusStateParam}', falling back to dot notation: ${message}`);
+        }
+      });
+
+      if (value === null) {
+        this.platform.log.warn(this.deviceName, ': Error: Cannot find KEY:', this.statusStateParam, 'in JSON');
       } else {
-        statusOnCheck = this.statusOnCheck;
-        statusOffCheck = this.statusOffCheck;
-      }
-      
-      if ( value === statusOnCheck ) {
-        this.updateOutletState(true, this.deviceName);
-      } else if (value === statusOffCheck) {
-        this.updateOutletState(false, this.deviceName);
-      } else {
-        this.platform.log.warn(this.deviceName, `: The value of ${this.statusStateParam} does not match statusOnCheck or statusOffCheck.`);
+        const valueType = typeof value;
+        
+        let statusOnCheck: boolean | number | string;
+        let statusOffCheck: boolean | number | string;
+        
+        if (valueType === 'boolean') {
+          statusOnCheck = true;
+          statusOffCheck = false;
+        } else if (valueType === 'number') {
+          statusOnCheck = parseFloat(this.statusOnCheck);
+          statusOffCheck = parseFloat(this.statusOffCheck);
+        } else {
+          statusOnCheck = this.statusOnCheck;
+          statusOffCheck = this.statusOffCheck;
+        }
+        
+        if ( value === statusOnCheck ) {
+          this.updateOutletState(true, this.deviceName);
+        } else if (value === statusOffCheck) {
+          this.updateOutletState(false, this.deviceName);
+        } else {
+          this.platform.log.warn(this.deviceName, `: The value of ${this.statusStateParam} does not match statusOnCheck or statusOffCheck.`);
+        }
       }
     }
       
-    if ( this.inUseStateParam && hasNestedKey(data, this.inUseStateParam) ) {
-      const value = getNestedValue(data, this.inUseStateParam, 'string'); // Adjust returnType as needed
+    if ( this.inUseStateParam ) {
+      const value = await getJsonValue(data, this.inUseStateParam, 'string', (error) => {
+        if (this.enableLogging) {
+          const message = error instanceof Error ? error.message : String(error);
+          this.platform.log.warn(`${this.deviceName}: JSONata error for '${this.inUseStateParam}', falling back to dot notation: ${message}`);
+        }
+      });
+
+      if (value === null) {
+        this.platform.log.warn(this.deviceName, ': Error: Cannot find KEY:', this.inUseStateParam, 'in JSON');
+        return;
+      }
+
       const valueType = typeof value;
       
       let inUseOnCheck: boolean | number | string;

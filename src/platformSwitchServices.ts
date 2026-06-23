@@ -2,7 +2,7 @@ import { CharacteristicSetCallback, CharacteristicValue, PlatformAccessory, Serv
 import type { HttpSensorsAndSwitchesHomebridgePlatform } from './platform.js';
 
 import { SharedPolling, SharedData } from './lib/SharedPolling.js';     // Include shared polling library
-import { getNestedValue, hasNestedKey } from './lib/utilities.js';      // Include utility function for nested value retrieval
+import { getJsonValue } from './lib/utilities.js';                      // Include utility function for JSON value retrieval
 import { discordWebHooks } from './lib/discordWebHooks.js';             // Include Discord webhook library
 
 import { HttpsAgentManager } from './lib/HttpsAgentManager.js';
@@ -214,7 +214,7 @@ export class platformSwitch {
   }
 
   private updateSwitchStatusFromSharedData( data?: Record<string, unknown> ): void {
-    this.processSwitchGetData(data, true);
+    void this.processSwitchGetData(data, true);
   }
 
   private async startIndividualPolling() {
@@ -232,7 +232,7 @@ export class platformSwitch {
 
       const data = response.data;
       this.platform.log.debug(`${this.deviceName}: Fetched JSON data:`, data);
-      this.processSwitchGetData(data, false);
+      await this.processSwitchGetData(data, false);
     } catch (error) {
       this.isReachable = false; // ❌ Mark as unreachable
 
@@ -247,16 +247,27 @@ export class platformSwitch {
     }
   }
   
-  private processSwitchGetData( data: Record<string, unknown> | undefined, isSharedData: boolean ): void {
+  private async processSwitchGetData( data: Record<string, unknown> | undefined, isSharedData: boolean ): Promise<void> {
     if (!data) {
       this.platform.log.warn(`${this.deviceName}: No data available for ${isSharedData ? 'shared data update' : 'fetching Switch state'}.`);
       return;
     }
 
     // Check if we have value
-    if ( this.statusStateParam && hasNestedKey(data, this.statusStateParam) ) {
+    if ( this.statusStateParam ) {
       // Proceed with processing the data
-      const value = getNestedValue(data, this.statusStateParam, 'string'); // Adjust returnType as needed
+      const value = await getJsonValue(data, this.statusStateParam, 'string', (error) => {
+        if (this.enableLogging) {
+          const message = error instanceof Error ? error.message : String(error);
+          this.platform.log.warn(`${this.deviceName}: JSONata error for '${this.statusStateParam}', falling back to dot notation: ${message}`);
+        }
+      });
+
+      if (value === null) {
+        this.platform.log.warn(this.deviceName, ': Error: Cannot find KEY:', this.statusStateParam, 'in JSON');
+        return;
+      }
+
       const valueType = typeof value;
 
       // Convert statusOnCheck and statusOffCheck to the appropriate type

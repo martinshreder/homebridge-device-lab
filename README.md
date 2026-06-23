@@ -29,6 +29,7 @@ Simple Discord Webhooks available in Light Bulb, Switches and Outlets and sensor
 > Enable Shared Polling under HTTP. Set Group name, Data Source URL and Update Interval for each.  
 >  
 > Supported Nested JSON data structure: 'switches.switch2'
+> JSON parameter fields also support JSONata expressions, for example 'switches.switch2 = 1 ? 1 : 0' or '$round(sensor2.tCelsius)'.
 ```json
 {
     "switches": {
@@ -200,6 +201,7 @@ Simple Discord Webhooks available in Light Bulb, Switches and Outlets and sensor
 >  
 > Nested JSON  
 > Support for Nested JSON structure: sensor2.tCelsius  
+> JSONata expressions are also supported in JSON parameter fields, for example sensor2.tCelsius * 1.8 + 32 or $round(sensor2.humidity).  
 >    
 
 > [!TIP]  
@@ -225,8 +227,8 @@ Simple Discord Webhooks available in Light Bulb, Switches and Outlets and sensor
     
 | **Param** 	| **Description** 	| **Values** 	|  
 |---	|---	|:---:	|  
-| temperatureName <br> mqttTemperature	| param name for Temperature reading 	| paramName or topic 	|  
-| humidityName <br> mqttHumidity	| param name for Humidity reading 	| paramName or topic 	|   
+| temperatureName <br> mqttTemperature	| param name or JSONata expression for Temperature reading 	| paramName or topic 	|  
+| humidityName <br> mqttHumidity	| param name or JSONata expression for Humidity reading 	| paramName or topic 	|   
 | sensorUrl 	| JSON file containing sensor readings (temperature, humidity)	|  URL 	|   
 | updateInterval 	| Update interval for reading Sensors	|  miliseconds 	|   
 | paramNameBatteryLevel <br> mqttBatteryLevel	| Current battery percentage (0–100%) 	| 0 (Empty), 100 (Full) 	|  

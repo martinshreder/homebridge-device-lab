@@ -3,7 +3,7 @@ import type { HttpSensorsAndSwitchesHomebridgePlatform } from './platform.js';
 
 
 import { SharedPolling, SharedData } from './lib/SharedPolling.js';        // Include shared polling library
-import { getNestedValue } from './lib/utilities.js';                       // Include utility function for nested value retrieval
+import { getJsonValue } from './lib/utilities.js';                         // Include utility function for JSON value retrieval
 import { discordWebHooks } from './lib/discordWebHooks.js';                // Include Discord webhook library
 import { deviceConfig } from './platformGenericDeviceSettings.js';         // Include device settings
 
@@ -295,7 +295,7 @@ export class platformGenericDevice {
   }
 
   private updateDeviceStatusFromSharedData(data?: Record<string, unknown>): void {
-    this.processGetDeviceStatusData(data, true);
+    void this.processGetDeviceStatusData(data, true);
   }
 
   private async getDeviceState(): Promise<void> {
@@ -310,7 +310,7 @@ export class platformGenericDevice {
       const response = await axios.get(this.urlStatus, { timeout: 8000, httpsAgent });
       const data = response.data;
       // this.platform.log.debug(`${this.deviceName}: Fetched JSON data:`, data);
-      this.processGetDeviceStatusData(data, false);
+      await this.processGetDeviceStatusData(data, false);
     } catch (error) {
       this.isReachable = false; // ❌ Mark as unreachable
 
@@ -323,18 +323,18 @@ export class platformGenericDevice {
     }
   }
 
-  private processGetDeviceStatusData(data: Record<string, unknown> | undefined, isSharedData: boolean): void {
+  private async processGetDeviceStatusData(data: Record<string, unknown> | undefined, isSharedData: boolean): Promise<void> {
     if (!data) {
       this.platform.log.warn(`${this.deviceName}: No data available for ${isSharedData ? 'shared data update' : 'fetching device state'}.`);
       return;
     }
 
-    this.getStateDefinition().forEach(({ state, param, webhook, fromConfig }): void => {
+    for (const { state, param, webhook, fromConfig } of this.getStateDefinition()) {
       if (!param) {
         if (this.enableLogging) {
           this.platform.log.debug(`${this.deviceName}: Parameter for ${state} is not configured. Skipping.`);
         }
-        return;
+        continue;
       }
 
       // Skip JSON parsing if value is from config
@@ -363,11 +363,16 @@ export class platformGenericDevice {
           );
         }
 
-        return;
+        continue;
       }
 
       // Otherwise, parse from live JSON
-      const rawValue = getNestedValue(data, param, 'number');
+      const rawValue = await getJsonValue(data, param, 'number', (error) => {
+        if (this.enableLogging) {
+          const message = error instanceof Error ? error.message : String(error);
+          this.platform.log.warn(`${this.deviceName}: JSONata error for '${param}', falling back to dot notation: ${message}`);
+        }
+      });
       let value: number | undefined;
 
       if (typeof rawValue === 'number') {
@@ -382,7 +387,7 @@ export class platformGenericDevice {
         if (this.enableLogging) {
           this.platform.log.warn(`${this.deviceName}: Parameter '${param}' not found in JSON for state ${state}.`);
         }
-        return;
+        continue;
       }
 
       const range = this.DeviceStatusRanges[state];
@@ -407,7 +412,7 @@ export class platformGenericDevice {
       } else if (this.enableLogging) {
         this.platform.log.warn(`${this.deviceName}: Received invalid ${state} value: ${value} (valid range: ${range[0]} to ${range[1]}).`);
       }
-    });
+    }
   }
 
   private async setDeviceState(what: keyof typeof this.DeviceStates, value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void> {

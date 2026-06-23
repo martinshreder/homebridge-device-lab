@@ -6,7 +6,7 @@ import axios, { AxiosError } from 'axios';
 import mqtt, { IClientOptions }  from 'mqtt';
 
 import { SharedPolling, SharedData } from './lib/SharedPolling.js';       // Include shared polling library
-import { getNestedValue } from './lib/utilities.js';
+import { getJsonValue } from './lib/utilities.js';
 import { discordWebHooks } from './lib/discordWebHooks.js';               // Include Discord webhook library
 
 
@@ -258,7 +258,7 @@ export class platformSensors {
   }
 
   private updateSensorStatusFromSharedData( data?: Record<string, unknown> ): void {
-    this.processGetSensorStatus(data, true);
+    void this.processGetSensorStatus(data, true);
   }
 
   private async getSensorData() {
@@ -272,7 +272,7 @@ export class platformSensors {
       const httpsAgent = this.httpsAgentManager.getAgent();
       const response = await axios.get(this.sensorUrl, { timeout: 8000, httpsAgent });
       const data = response.data;
-      this.processGetSensorStatus(data, false);
+      await this.processGetSensorStatus(data, false);
     } catch (error) {
       this.isReachable = false;
       const axiosError = error as AxiosError;
@@ -284,7 +284,7 @@ export class platformSensors {
     }
   }
 
-  private processGetSensorStatus(data: Record<string, unknown> | undefined, isSharedData: boolean ): void {
+  private async processGetSensorStatus(data: Record<string, unknown> | undefined, isSharedData: boolean ): Promise<void> {
     if (!data) {
       this.platform.log.warn(`${this.deviceName}: No data available for ${isSharedData ? 'shared data update' : 'fetching Switch state'}.`);
       return;
@@ -293,7 +293,12 @@ export class platformSensors {
     // If Temperature Service is available
     if (this.temperatureService) {
       if (this.temperatureName) {
-        const tmpTemperature = getNestedValue(data, this.temperatureName, 'number');
+        const tmpTemperature = await getJsonValue(data, this.temperatureName, 'number', (error) => {
+          if (this.enableLogging) {
+            const message = error instanceof Error ? error.message : String(error);
+            this.platform.log.warn(`${this.deviceName}: JSONata error for '${this.temperatureName}', falling back to dot notation: ${message}`);
+          }
+        });
         
         if (typeof tmpTemperature === 'number') {
           this.currentTemperature = tmpTemperature;
@@ -312,7 +317,12 @@ export class platformSensors {
     // If Humidity Service is available
     if (this.humidityService) {
       if (this.humidityName) {
-        const tmpHumidity = getNestedValue(data, this.humidityName, 'number');
+        const tmpHumidity = await getJsonValue(data, this.humidityName, 'number', (error) => {
+          if (this.enableLogging) {
+            const message = error instanceof Error ? error.message : String(error);
+            this.platform.log.warn(`${this.deviceName}: JSONata error for '${this.humidityName}', falling back to dot notation: ${message}`);
+          }
+        });
     
         if (typeof tmpHumidity === 'number') {
           this.currentHumidity = tmpHumidity;
@@ -338,7 +348,12 @@ export class platformSensors {
     // If Battery Service is available
     if (this.batteryService) {
       if (this.batteryLevelName) {
-        const tmpBatteryLevel = getNestedValue(data, this.batteryLevelName, 'number');
+        const tmpBatteryLevel = await getJsonValue(data, this.batteryLevelName, 'number', (error) => {
+          if (this.enableLogging) {
+            const message = error instanceof Error ? error.message : String(error);
+            this.platform.log.warn(`${this.deviceName}: JSONata error for '${this.batteryLevelName}', falling back to dot notation: ${message}`);
+          }
+        });
 
         if (typeof tmpBatteryLevel === 'number') {
           this.currentBatteryLevel = tmpBatteryLevel;
@@ -352,7 +367,12 @@ export class platformSensors {
       }
 
       if (this.batteryChargingStateName) {
-        const tmpChargingState = getNestedValue(data, this.batteryChargingStateName, 'number');
+        const tmpChargingState = await getJsonValue(data, this.batteryChargingStateName, 'number', (error) => {
+          if (this.enableLogging) {
+            const message = error instanceof Error ? error.message : String(error);
+            this.platform.log.warn(`${this.deviceName}: JSONata error for '${this.batteryChargingStateName}', falling back to dot notation: ${message}`);
+          }
+        });
 
         if (typeof tmpChargingState === 'number') {
           this.currentBatteryChargingState = tmpChargingState;
@@ -366,7 +386,12 @@ export class platformSensors {
       }
 
       if (this.batteryStatusLowName) {
-        const tmpStatusLow = getNestedValue(data, this.batteryStatusLowName, 'boolean');
+        const tmpStatusLow = await getJsonValue(data, this.batteryStatusLowName, 'boolean', (error) => {
+          if (this.enableLogging) {
+            const message = error instanceof Error ? error.message : String(error);
+            this.platform.log.warn(`${this.deviceName}: JSONata error for '${this.batteryStatusLowName}', falling back to dot notation: ${message}`);
+          }
+        });
 
         if (typeof tmpStatusLow === 'boolean') {
           this.currentBatteryStatusLow = tmpStatusLow;

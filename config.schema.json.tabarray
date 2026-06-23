@@ -137,7 +137,7 @@
             },
             "stateName": {
               "title": "Parameter Name for On/Off",
-              "description": "JSON Parameter Name for On/Off status",
+              "description": "JSON Parameter Name or JSONata expression for On/Off status",
               "type": "string",
               "required": false
             },
@@ -155,7 +155,7 @@
             },
             "inUseStateName": {
               "title": "Parameter Name for: in USE",
-              "description": "JSON Parameter Name for in Use status",
+              "description": "JSON Parameter Name or JSONata expression for in Use status",
               "type": "string",
               "required": false
             },
@@ -197,7 +197,7 @@
             },
             "rgbParamName": {
               "title": "Parameter Name for RGB",
-              "description": "JSON Parameter Name for RGB color",
+              "description": "JSON Parameter Name or JSONata expression for RGB color",
               "type": "string",
               "required": false
             },
@@ -209,25 +209,25 @@
             },
             "brightnessParamName": {
               "title": "Parameter Name for Brightness",
-              "description": "JSON Parameter Name for Brightness",
+              "description": "JSON Parameter Name or JSONata expression for Brightness",
               "type": "string",
               "required": false
             },
             "saturationParamName": {
               "title": "Parameter Name for Saturation",
-              "description": "JSON Parameter Name for Saturation",
+              "description": "JSON Parameter Name or JSONata expression for Saturation",
               "type": "string",
               "required": false
             },
             "hueParamName": {
               "title": "Parameter Name for HUE",
-              "description": "JSON Parameter Name for HUE",
+              "description": "JSON Parameter Name or JSONata expression for HUE",
               "type": "string",
               "required": false
             },
             "colorTemperatureParamName": {
               "title": "Parameter Name for Color Temperature",
-              "description": "JSON Parameter Name for Color Temperature",
+              "description": "JSON Parameter Name or JSONata expression for Color Temperature",
               "type": "string",
               "required": false
             },
@@ -239,217 +239,217 @@
             },
             "paramNameStatusActive": {
               "title": "Parameter Name for Active",
-              "description": "JSON Parameter Name for Active (on/off)",
+              "description": "JSON Parameter Name or JSONata expression for Active (on/off)",
               "type": "string",
               "required": false
             },
             "paramNameInUse": {
               "title": "Parameter Name for In Use",
-              "description": "JSON Parameter Name for In Use (on/off)",
+              "description": "JSON Parameter Name or JSONata expression for In Use (on/off)",
               "type": "string",
               "required": false
             },
             "paramNameTargetDoorState": {
               "title": "Parameter Name for Target Door State",
-              "description": "JSON Parameter Name for TargetDoorState",
+              "description": "JSON Parameter Name or JSONata expression for TargetDoorState",
               "type": "string",
               "required": false
             },
             "paramNameCurrentDoorState": {
               "title": "Parameter Name for CurrentDoorState",
-              "description": "JSON Parameter Name for Current Door State",
+              "description": "JSON Parameter Name or JSONata expression for Current Door State",
               "type": "string",
               "required": false
             },
             "paramNameObstructionDetected": {
               "title": "Parameter Name for Obstruction Detected",
-              "description": "JSON Parameter Name for Obstruction Detected",
+              "description": "JSON Parameter Name or JSONata expression for Obstruction Detected",
               "type": "string",
               "required": false
             },
             "paramNameStatusJammed": {
               "title": "Parameter Name for Device Jammed",
-              "description": "JSON Parameter Name for Device Jammed",
+              "description": "JSON Parameter Name or JSONata expression for Device Jammed",
               "type": "string",
               "required": false
             },
             "paramNameTargetPosition": {
               "title": "Parameter Name for Target Position",
-              "description": "JSON Parameter Name for Target Position",
+              "description": "JSON Parameter Name or JSONata expression for Target Position",
               "type": "string",
               "required": false
             },
             "paramNameCurrentPosition": {
               "title": "Parameter Name for Current Position",
-              "description": "JSON Parameter Name for Current Position",
+              "description": "JSON Parameter Name or JSONata expression for Current Position",
               "type": "string",
               "required": false
             },
             "paramNamePositionState": {
               "title": "Parameter Name for Position State",
-              "description": "JSON Parameter Name for Position State",
+              "description": "JSON Parameter Name or JSONata expression for Position State",
               "type": "string",
               "required": false
             },
             "paramNameHoldPosition": {
               "title": "Parameter Name for Hold Position",
-              "description": "JSON Parameter Name for Hold Position",
+              "description": "JSON Parameter Name or JSONata expression for Hold Position",
               "type": "string",
               "required": false
             },
             "paramNameRotationSpeed": {
               "title": "Parameter Name for Rotation Speed",
-              "description": "JSON Parameter Name for Rotation Speed",
+              "description": "JSON Parameter Name or JSONata expression for Rotation Speed",
               "type": "string",
               "required": false
             },
             "paramNameRotationDirection": {
               "title": "Parameter Name for Rotation Direction",
-              "description": "JSON Parameter Name for Rotation Direction",
+              "description": "JSON Parameter Name or JSONata expression for Rotation Direction",
               "type": "string",
               "required": false
             },
             "paramNameSwingMode": {
               "title": "Parameter Name for Swing Mode",
-              "description": "JSON Parameter Name for Swing Mode",
+              "description": "JSON Parameter Name or JSONata expression for Swing Mode",
               "type": "string",
               "required": false
             },
             "paramNameCurrentFanState": {
               "title": "Parameter Name for Current Fan State",
-              "description": "JSON Parameter Name for Current Fan State",
+              "description": "JSON Parameter Name or JSONata expression for Current Fan State",
               "type": "string",
               "required": false
             },
             "paramNameTargetFanState": {
               "title": "Parameter Name for Target Fan State",
-              "description": "JSON Parameter Name for Target Fan State",
+              "description": "JSON Parameter Name or JSONata expression for Target Fan State",
               "type": "string",
               "required": false
             },
             "paramNameContactSensorState": {
               "title": "Parameter Name for Contact Sensor State",
-              "description": "JSON Parameter Name for Contact Sensor State",
+              "description": "JSON Parameter Name or JSONata expression for Contact Sensor State",
               "type": "string",
               "required": false
             },
             "paramNameCurrentAmbientLightLevel": {
               "title": "Parameter Name for Current Ambient Light Level",
-              "description": "JSON Parameter Name for Current Ambient Light Level",
+              "description": "JSON Parameter Name or JSONata expression for Current Ambient Light Level",
               "type": "string",
               "required": false
             },
             "paramNameCO2Detected": {
               "title": "Parameter Name for CO2 Detected",
-              "description": "JSON Parameter Name for CO2 Detected",
+              "description": "JSON Parameter Name or JSONata expression for CO2 Detected",
               "type": "string",
               "required": false
             },
             "paramNameSmokeDetected": {
               "title": "Parameter Name for Smoke Detected",
-              "description": "JSON Parameter Name for Smoke Detected",
+              "description": "JSON Parameter Name or JSONata expression for Smoke Detected",
               "type": "string",
               "required": false
             },
             "paramNameOccupancyDetected": {
               "title": "Parameter Name for Occupancy Detected",
-              "description": "JSON Parameter Name for Occupancy Detected",
+              "description": "JSON Parameter Name or JSONata expression for Occupancy Detected",
               "type": "string",
               "required": false
             },
             "paramNameMotionDetected": {
               "title": "Parameter Name for Motion Detected",
-              "description": "JSON Parameter Name for Motion Detected",
+              "description": "JSON Parameter Name or JSONata expression for Motion Detected",
               "type": "string",
               "required": false
             },
             "paramNameAirQuality": {
               "title": "Parameter Name for Air Quality",
-              "description": "JSON Parameter Name for Air Quality",
+              "description": "JSON Parameter Name or JSONata expression for Air Quality",
               "type": "string",
               "required": false
             },
             "paramNamePM2_5Density": {
               "title": "Parameter Name for PM2.5 Density",
-              "description": "JSON Parameter Name for PM2.5 Density",
+              "description": "JSON Parameter Name or JSONata expression for PM2.5 Density",
               "type": "string",
               "required": false
             },
             "paramNamePM10Density": {
               "title": "Parameter Name for PM10 Density",
-              "description": "JSON Parameter Name for PM10 Density",
+              "description": "JSON Parameter Name or JSONata expression for PM10 Density",
               "type": "string",
               "required": false
             },
             "paramNameOzoneDensity": {
               "title": "Parameter Name for Ozone Density",
-              "description": "JSON Parameter Name for Ozone Density",
+              "description": "JSON Parameter Name or JSONata expression for Ozone Density",
               "type": "string",
               "required": false
             },
             "paramNameNitrogenDioxideDensity": {
               "title": "Parameter Name for Nitrogen Dioxide Density",
-              "description": "JSON Parameter Name for Nitrogen Dioxide Density",
+              "description": "JSON Parameter Name or JSONata expression for Nitrogen Dioxide Density",
               "type": "string",
               "required": false
             },
             "paramNameSulphurDioxideDensity": {
               "title": "Parameter Name for Sulphur Dioxide Density",
-              "description": "JSON Parameter Name for Sulphur Dioxide Density",
+              "description": "JSON Parameter Name or JSONata expression for Sulphur Dioxide Density",
               "type": "string",
               "required": false
             },
             "paramNameCarbonMonoxideLevel": {
               "title": "Parameter Name for Carbon Monoxide Level",
-              "description": "JSON Parameter Name for Carbon Monoxide Level",
+              "description": "JSON Parameter Name or JSONata expression for Carbon Monoxide Level",
               "type": "string",
               "required": false
             },
             "paramNameVOCDensity": {
               "title": "Parameter Name for VOC Level",
-              "description": "JSON Parameter Name for Volatile Organic Compounds Level",
+              "description": "JSON Parameter Name or JSONata expression for Volatile Organic Compounds Level",
               "type": "string",
               "required": false
             },
             "paramNameCO2Level": {
               "title": "Parameter Name for CO2 Level",
-              "description": "JSON Parameter Name for CO2 Level",
+              "description": "JSON Parameter Name or JSONata expression for CO2 Level",
               "type": "string",
               "required": false
             },
             "paramNameCO2PeakLevel": {
               "title": "Parameter Name for CO2 Peak Level",
-              "description": "JSON Parameter Name for CO2 Peak Level",
+              "description": "JSON Parameter Name or JSONata expression for CO2 Peak Level",
               "type": "string",
               "required": false
             },
             "paramNameStatusFault": {
               "title": "Parameter Name for Fault",
-              "description": "JSON Parameter Name Device Fault",
+              "description": "JSON Parameter Name or JSONata expression Device Fault",
               "type": "string",
               "required": false
             },
             "paramNameBatteryLevel": {
               "title": "Parameter Name for Battery level",
-              "description": "JSON Parameter Name for Battery level",
+              "description": "JSON Parameter Name or JSONata expression for Battery level",
               "type": "string",
               "required": false
             },
             "paramNameStatusLowBattery": {
               "title": "Parameter Name for Low Battery",
-              "description": "JSON Parameter Name for Low Battery",
+              "description": "JSON Parameter Name or JSONata expression for Low Battery",
               "type": "string",
               "required": false
             },
             "paramNameStatusChargingBattery": {
               "title": "Parameter Name for Charging Battery",
-              "description": "JSON Parameter Name for Charging Battery",
+              "description": "JSON Parameter Name or JSONata expression for Charging Battery",
               "type": "string",
               "required": false
             },
             "paramNameStatusTampered": {
               "title": "Parameter Name for Tampered",
-              "description": "JSON Parameter Name Device is Tampered",
+              "description": "JSON Parameter Name or JSONata expression Device is Tampered",
               "type": "string",
               "required": false
             },
@@ -472,13 +472,13 @@
             },
             "temperatureName": {
               "title": "Parameter Name for Temperature",
-              "description": "JSON parameter name for Temperature reading",
+              "description": "JSON parameter name or JSONata expression for Temperature reading",
               "type": "string",
               "required": false
             },
             "humidityName": {
               "title": "Parameter Name for Humidity",
-              "description": "JSON parameter name for Humidity reading",
+              "description": "JSON parameter name or JSONata expression for Humidity reading",
               "type": "string",
               "required": false
             },

@@ -7,7 +7,7 @@ import mqtt, { IClientOptions } from 'mqtt';
 
 import { SharedPolling, SharedData  } from './lib/SharedPolling.js';       // Include shared polling library
 import { discordWebHooks } from './lib/discordWebHooks.js';
-import { getNestedValue } from './lib/utilities.js';
+import { getJsonValue } from './lib/utilities.js';
 import { sensorConfig } from './platformSensorGenericSettings.js';
 
 
@@ -258,7 +258,7 @@ export class platformSensorGeneric {
   }  
 
   private updateSensorStatusFromSharedData( data?: Record<string, unknown> ): void {
-    this.processSensorState(data, true);
+    void this.processSensorState(data, true);
   }
 
   private async getSensorState(): Promise<void> {
@@ -275,7 +275,7 @@ export class platformSensorGeneric {
       const response = await axios.get(this.urlStatus, { timeout: 8000, httpsAgent });
 
       const data = response.data;
-      this.processSensorState(data, false);
+      await this.processSensorState(data, false);
     } catch (error) {
       this.isReachable = false; // ❌ Mark as unreachable
 
@@ -304,21 +304,26 @@ export class platformSensorGeneric {
     }
   }
   
-  private processSensorState( data: Record<string, unknown> | undefined, isSharedData: boolean ): void {
+  private async processSensorState( data: Record<string, unknown> | undefined, isSharedData: boolean ): Promise<void> {
     if (!data) {
       this.platform.log.warn(`${this.deviceName}: No data available for ${isSharedData ? 'shared data update' : 'fetching JSON state'}.`);
       return;
     }
     
-    this.getStateDefinition().forEach(({ state, param, webhook }): void => {
+    for (const { state, param, webhook } of this.getStateDefinition()) {
       if ( !param ) {
         if ( this.enableLogging ) { 
           this.platform.log.debug(`${this.deviceName}: Parameter for ${state} is not configured. Skipping.`);
         }
-        return;
+        continue;
       }
   
-      const rawValue = getNestedValue(data, param, 'number');
+      const rawValue = await getJsonValue(data, param, 'number', (error) => {
+        if (this.enableLogging) {
+          const message = error instanceof Error ? error.message : String(error);
+          this.platform.log.warn(`${this.deviceName}: JSONata error for '${param}', falling back to dot notation: ${message}`);
+        }
+      });
       let value: number | undefined;
   
       if (typeof rawValue === 'number') {
@@ -333,7 +338,7 @@ export class platformSensorGeneric {
         if (this.enableLogging) {
           this.platform.log.warn(`${this.deviceName}: Parameter '${param}' not found in JSON for state ${state}.`);
         }
-        return;
+        continue;
       }
 
       // 🔧 Apply optional transform (safe version)
@@ -369,7 +374,7 @@ export class platformSensorGeneric {
       } else if ( this.enableLogging ) {
         this.platform.log.warn(`${this.deviceName}: Received invalid ${state} value: ${value} (valid range: ${range[0]} to ${range[1]}).`);
       }
-    });
+    }
   }
   
   private initMQTT() {
